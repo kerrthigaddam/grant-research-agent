@@ -1,6 +1,7 @@
+from modules.proposal_writer import generate_proposal
+from modules.pdf_generator import create_pdf
 import streamlit as st
 import pandas as pd
-from modules.proposal_writer import generate_proposal
 st.title("Claude-Powered Grant Research Agent")
 org_name = st.text_input("Organization Name")
 mission = st.text_area("Mission Statement")
@@ -30,6 +31,15 @@ if st.button("Generate Proposal"):
         org_name,
         mission
     )
+    pdf_file = create_pdf(proposal)
+
+    with open(pdf_file, "rb") as file:
+        st.download_button(
+            label="Download Proposal PDF",
+            data=file,
+            file_name="grant_proposal.pdf",
+            mime="application/pdf"
+        )
 
     st.subheader("Grant Proposal Draft")
 

@@ -9,7 +9,7 @@ client = boto3.client(
 def generate_ai_proposal(org_name, mission):
 
     prompt = f"""
-You are a nonprofit grant writing expert.
+You are an expert nonprofit grant writer.
 
 Organization:
 {org_name}
@@ -21,23 +21,27 @@ Write a professional grant proposal including:
 
 1. Executive Summary
 2. Organization Overview
-3. Need Statement
+3. Problem Statement
 4. Project Goals
-5. Expected Impact
+5. Expected Outcomes
+6. Funding Request
+7. Conclusion
 """
+
+    body = {
+        "anthropic_version": "bedrock-2023-05-31",
+        "max_tokens": 1000,
+        "messages": [
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ]
+    }
 
     response = client.invoke_model(
         modelId="anthropic.claude-sonnet-4-20250514-v1:0",
-        body=json.dumps({
-            "anthropic_version": "bedrock-2023-05-31",
-            "max_tokens": 1000,
-            "messages": [
-                {
-                    "role": "user",
-                    "content": prompt
-                }
-            ]
-        })
+        body=json.dumps(body)
     )
 
     result = json.loads(
